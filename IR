@@ -1,0 +1,35 @@
+// Define the pin for the IR sensor
+const int irSensorPin = 2;
+
+// Define the pin for the relay controlling the fan
+const int fanRelayPin = 9;
+
+void setup() {
+  // Set the IR sensor pin as an input
+  pinMode(irSensorPin, INPUT);
+
+  // Set the fan relay pin as an output
+  pinMode(fanRelayPin, OUTPUT);
+
+  // Initialize the fan as off
+  digitalWrite(fanRelayPin, LOW); // Assuming LOW deactivates the relay
+  Serial.begin(9600);
+  Serial.println("IR-Activated Fan Ready!");
+}
+
+void loop() {
+  // Read the state of the IR sensor
+  int sensorValue = digitalRead(irSensorPin);
+
+  // If something is detected by the IR sensor (HIGH signal)
+  if (sensorValue == HIGH) {
+    Serial.println("Object Detected! Turning fan ON.");
+    digitalWrite(fanRelayPin, HIGH); // Turn the fan ON (activate relay)
+  } else {
+    // If nothing is detected by the IR sensor (LOW signal)
+    Serial.println("No Object Detected. Turning fan OFF.");
+    digitalWrite(fanRelayPin, LOW);  // Turn the fan OFF (deactivate relay)
+  }
+
+  delay(100); // Small delay to avoid reading the sensor too rapidly
+}
