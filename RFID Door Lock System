@@ -1,0 +1,132 @@
+#include <Servo.h>
+#include <LiquidCrystal_I2C.h>
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10
+#define RST_PIN 9
+#define BUZZER_PIN 2
+#define LED_GREEN 5
+#define LED_RED 4
+#define LED_WHITE 6
+String UID = "F4 6D 07 05";
+byte lock = 0;
+unsigned long unlockTime = 0;
+const unsigned long autoLockDelay = 5000;
+const unsigned long servoOpenDelay = 1000; // Delay for servo 1 to open
+const unsigned long servoLockDelay = 1000; // Delay for servo 2 to lock
+
+Servo servo1;
+Servo servo2;
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+MFRC522 rfid(SS_PIN, RST_PIN);
+
+void setup() {
+  Serial.begin(9600);
+  servo1.write(160);
+  servo2.write(40); //Initialize the second servo to a closed position
+  lcd.init();
+  lcd.backlight();
+  servo1.attach(3);
+  servo2.attach(7); // Attach the second servo to pin 7
+  SPI.begin();
+  rfid.PCD_Init();
+
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_RED, OUTPUT);
+  pinMode(LED_WHITE, OUTPUT);
+
+  digitalWrite(LED_GREEN, LOW);
+  digitalWrite(LED_RED, LOW);
+  digitalWrite(LED_WHITE, LOW);
+  digitalWrite(BUZZER_PIN, LOW);
+}
+
+void loop() {
+  lcd.setCursor(4, 0);
+  lcd.print("Welcome!");
+  lcd.setCursor(1, 1);
+  lcd.print("Put your card");
+
+  if (!rfid.PICC_IsNewCardPresent()) {
+    if (lock == 1 && (millis() - unlockTime >= autoLockDelay)) {
+      servo2.write(40); //close the second servo.
+      delay(servoLockDelay); // Delay before locking the second servo.
+      servo1.write(150);
+      lcd.clear();
+      lcd.setCursor(0, 0);
+      lcd.print("Door is locked");
+      digitalWrite(LED_RED, HIGH);
+      digitalWrite(LED_GREEN, LOW);
+      digitalWrite(LED_WHITE, LOW);
+      digitalWrite(BUZZER_PIN, HIGH);
+      delay(500);
+      digitalWrite(BUZZER_PIN, LOW);
+      delay(1000);
+      lcd.clear();
+      lock = 0;
+      digitalWrite(LED_RED, LOW);
+    }
+    return;
+  }
+
+  if (!rfid.PICC_ReadCardSerial())
+    return;
+
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Scanning");
+  Serial.print("NUID tag is :");
+  String ID = "";
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    lcd.print(".");
+    ID.concat(String(rfid.uid.uidByte[i] < 0x10 ? " 0" : " "));
+    ID.concat(String(rfid.uid.uidByte[i], HEX));
+    delay(300);
+  }
+  ID.toUpperCase();
+
+  if (ID.substring(1) == UID && lock == 0) {
+    servo1.write(60);
+    digitalWrite(LED_WHITE, HIGH); // Turn on white LED here
+    delay(servoOpenDelay); // Delay for servo 1 to open
+    servo2.write(180);       //open the second servo.
+    lcd.clear();
+    lcd.setCursor(3, 0);
+    lcd.print("Authorized");
+    lcd.setCursor(5, 1);
+    lcd.print("access");
+    digitalWrite(LED_GREEN, HIGH);
+    digitalWrite(LED_RED, LOW);
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(500);
+    digitalWrite(BUZZER_PIN, LOW);
+    delay(1000);
+    lcd.clear();
+    lock = 1;
+    unlockTime = millis();
+    digitalWrite(LED_GREEN, LOW);
+  } else if (ID.substring(1) == UID && lock == 1) {
+    unlockTime = millis();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Still open...");
+    digitalWrite(LED_WHITE, HIGH);
+    delay(1500);
+    lcd.clear();
+  } else {
+    lcd.clear();
+    lcd.setCursor(1, 0);
+    lcd.print("Access denied");
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, LOW);
+    digitalWrite(LED_WHITE, LOW);
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(1000);
+    digitalWrite(BUZZER_PIN, LOW);
+    delay(500);
+    lcd.clear();
+    digitalWrite(LED_RED, LOW);
+  }
+}
