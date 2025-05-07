@@ -1,0 +1,190 @@
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+int seconds = 0;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+//Lyrics
+char array1[]= "SO, WHY DO I";
+char array2[]= "KEEP DIVING";
+char array3[]= "INTO YOUU??";
+char array4[]= "WHEN I KNOW";
+char array5[]= "THIS IS JUST";
+char array6[]= "A GAME THAT";
+char array7[]= "YOU RULE :)";
+char array8[]= "SO, TELL ME,";
+char array9[]= "BABY";
+char array10[]= "WHY DO I";
+char array11[]= "KEEP FALLING";
+char array12[]= "FOR YOUUUU??";
+char array13[]= "YOU KNOW MY";
+char array14[]= "HEART AIN'T";
+char array15[]= "STRONG AS YOURS";
+char array16[]= "BUT YOU KEEP";
+char array17[]= "COMING BACK";
+char array18[]= "FOR MORE";
+
+void setup()
+{
+  lcd.init();
+}
+
+void loop()
+{
+  //CHUROS
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array1) - 1; i++)
+  {
+    lcd.print(array1[i]);
+    delay(50);
+  }
+  delay(2000);
+
+  lcd.setCursor(5,1);
+  for (int i = 0; i < sizeof(array2) - 1; i++)
+  {
+    lcd.print(array2[i]);
+    delay(50);
+  }
+  delay(900);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array3) - 1; i++)
+  {
+    lcd.print(array3[i]);
+    delay(50);
+  }
+  delay(2000);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array4) - 1; i++)
+  {
+    lcd.print(array4[i]);
+    delay(50);
+  }
+  delay(500);
+  
+
+  lcd.setCursor(4,1);
+  for (int i = 0; i < sizeof(array5) - 1; i++)
+  {
+    lcd.print(array5[i]);
+    delay(50);
+  }
+  delay(500);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array6) - 1; i++)
+  {
+    lcd.print(array6[i]);
+    delay(50);
+  }
+  delay(900);
+  
+  lcd.setCursor(5,1);
+  for (int i = 0; i < sizeof(array7) - 1; i++)
+  {
+    lcd.print(array7[i]);
+    delay(50);
+  }
+  delay(1500);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array8) - 1; i++)
+  {
+    lcd.print(array8[i]);
+    delay(50);
+  }
+  delay(500);
+
+  lcd.setCursor(12,1);
+  for (int i = 0; i < sizeof(array9) - 1; i++)
+  {
+    lcd.print(array9[i]);
+    delay(50);
+  }
+  delay(700);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array10) - 1; i++)
+  {
+    lcd.print(array10[i]);
+    delay(50);
+  }
+  delay(1000);
+
+  lcd.setCursor(4,1);
+  for (int i = 0; i < sizeof(array11) - 1; i++)
+  {
+    lcd.print(array11[i]);
+    delay(50);
+  }
+  delay(700);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array12) - 1; i++)
+  {
+    lcd.print(array12[i]);
+    delay(50);
+  }
+  delay(2500);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array13) - 1; i++)
+  {
+    lcd.print(array13[i]);
+    delay(50);
+  }
+  delay(250);
+
+  lcd.setCursor(5,1);
+  for (int i = 0; i < sizeof(array14) - 1; i++)
+  {
+    lcd.print(array14[i]);
+    delay(50);
+  }
+  delay(150);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array15) - 1; i++)
+  {
+    lcd.print(array15[i]);
+    delay(50);
+  }
+  delay(800);
+
+  lcd.setCursor(4,1);
+  for (int i = 0; i < sizeof(array16) - 1; i++)
+  {
+    lcd.print(array16[i]);
+    delay(50);
+  }
+  delay(400);
+  lcd.clear();
+
+  lcd.setCursor(0,0);
+  for (int i = 0; i < sizeof(array17) - 1; i++)
+  {
+    lcd.print(array17[i]);
+    delay(50);
+  }
+  delay(500);
+
+  lcd.setCursor(8,1);
+  for (int i = 0; i < sizeof(array18) - 1; i++)
+  {
+    lcd.print(array18[i]);
+    delay(50);
+  }
+  delay(3000);
+  lcd.clear();
+}
